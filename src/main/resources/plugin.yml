@@ -1,0 +1,4 @@
+name: DiscordRemote
+version: '1.0'
+main: io.github.enoughsdv.discordremote.DiscordRemote
+author: Enoughsdv

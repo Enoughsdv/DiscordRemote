@@ -1,0 +1,43 @@
+settings:
+  discord:
+    token: ""
+    activity:
+      message: "Discord bot"
+      type: "LISTENING" # LISTENING, PLAYING, STREAMING, WATCHING, STREAMING
+
+messages:
+  no_permissions: "You have no permissions"
+
+custom_commands:
+  list:
+    ping:
+      description: "this is a ping command"
+      response: "this is a test"
+      arguments: {}
+      actions:
+        - "ping"
+      allowed:
+        users: []
+        roles:
+          - 1148850164610633741
+    test:
+      description: "another test i hope?"
+      response: "this is a test x2"
+      arguments:
+        1:
+          type: "NUMBER" # BOOLEAN, NUMBER, STRING
+          name: "reason"
+          description: "asdasdasdasd"
+          required: true
+        2:
+          type: "STRING" # BOOLEAN, NUMBER, STRING
+          name: "elpepe"
+          description: "asdasdasdasd"
+          required: true
+      actions:
+        - "test {reason} {elpepe}"
+      allowed:
+        users: []
+        roles:
+          - 1148850164610633741
+          - 1148850150576504883
