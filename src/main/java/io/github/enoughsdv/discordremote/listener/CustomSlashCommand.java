@@ -24,21 +24,16 @@ public class CustomSlashCommand extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-
         config.getConfigurationSection("custom_commands.list").getKeys(false).stream()
             .filter(string -> event.getName().equalsIgnoreCase(string))
             .filter(string -> {
                 List<String> allowedUsers = config.getStringList("custom_commands.list." + string + ".allowed.users");
 
-                if (allowedUsers.isEmpty()) {
+                if (allowedUsers.isEmpty() || allowedUsers.contains(event.getUser().getId())) {
                     return true;
                 } else {
-                    if (allowedUsers.contains(event.getUser().getId())) {
-                        return true;
-                    } else {
-                        event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
-                        return false;
-                    }
+                    event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
+                    return false;
                 }
             })
             .filter(string -> {
@@ -46,16 +41,17 @@ public class CustomSlashCommand extends ListenerAdapter {
 
                 if (allowedRoles.isEmpty()) {
                     return true;
-                } else {
-                    for (String roleId : allowedRoles) {
-                        Role role = Objects.requireNonNull(event.getGuild()).getRoleById(roleId);
-                        if (Objects.requireNonNull(event.getMember()).getRoles().contains(role)) {
-                            return true;
-                        }
-                    }
-                    event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
-                    return false;
                 }
+
+                for (String roleId : allowedRoles) {
+                    Role role = Objects.requireNonNull(event.getGuild()).getRoleById(roleId);
+                    if (Objects.requireNonNull(event.getMember()).getRoles().contains(role)) {
+                        return true;
+                    }
+                }
+
+                event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
+                return false;
             })
             .forEach(string -> {
                 for (String command : config.getStringList("custom_commands.list." + string + ".actions")) {
@@ -64,7 +60,9 @@ public class CustomSlashCommand extends ListenerAdapter {
                         command = command.replace("{" + argument.getName() + "}", argument.getAsString());
                     }
 
-                    Bukkit.getLogger().info("Executed custom command: " + command + " | By user: " + event.getInteraction().getUser().getName());
+                    plugin.getLogger().info(config.getString("messages.logger")
+                        .replace("{command}", command)
+                        .replace("{user}", event.getInteraction().getUser().getName()));
 
                     if (Bukkit.isPrimaryThread()) {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);

@@ -24,8 +24,7 @@ public final class DiscordRemote extends JavaPlugin {
     private void loadDiscordBot() {
         JDA jda = JDABuilder.createLight(this.getConfig().getString("settings.discord.token"), Collections.emptyList())
             .addEventListeners(new CustomSlashCommand(this))
-            .setActivity(Activity.of(Activity.ActivityType.valueOf(this.getConfig().getString("settings.discord.activity.type")),
-                this.getConfig().getString("settings.discord.activity.message")))
+            .setActivity(getActivity())
             .build();
 
         CommandListUpdateAction commandListUpdateAction = jda.updateCommands();
@@ -48,7 +47,7 @@ public final class DiscordRemote extends JavaPlugin {
                         .forEach(choice -> {
                             optionData.addChoice(this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".name"),
                                 this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".value"));
-                    });
+                        });
 
                     slashCommand.addOptions(optionData);
                 });
@@ -58,6 +57,12 @@ public final class DiscordRemote extends JavaPlugin {
         });
 
         commandListUpdateAction.queue(success -> this.getLogger().info("Successfully registered discord slash commands"),
-                failure -> this.getLogger().warning("Failed to register discord slash commands"));
+            failure -> this.getLogger().warning("Failed to register discord slash commands"));
+    }
+
+    private Activity getActivity() {
+        String activityType = this.getConfig().getString("settings.discord.activity.type");
+        String activityMessage = this.getConfig().getString("settings.discord.activity.message");
+        return Activity.of(Activity.ActivityType.valueOf(activityType), activityMessage);
     }
 }
