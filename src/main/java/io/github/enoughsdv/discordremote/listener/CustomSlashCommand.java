@@ -33,8 +33,12 @@ public class CustomSlashCommand extends ListenerAdapter {
                 if (allowedUsers.isEmpty()) {
                     return true;
                 } else {
-                    event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
-                    return allowedUsers.contains(event.getUser().getId());
+                    if (allowedUsers.contains(event.getUser().getId())) {
+                        return true;
+                    } else {
+                        event.reply(config.getString("messages.no_permissions")).setEphemeral(true).queue();
+                        return false;
+                    }
                 }
             })
             .filter(string -> {
@@ -69,7 +73,7 @@ public class CustomSlashCommand extends ListenerAdapter {
                         Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
                     }
 
-                    event.reply("You have successfully executed the command").queue();
+                    event.reply(config.getString("custom_commands.list." + string + ".response")).queue();
                 }
             });
     }
