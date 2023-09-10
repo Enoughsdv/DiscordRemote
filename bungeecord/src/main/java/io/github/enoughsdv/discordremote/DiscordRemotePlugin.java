@@ -24,7 +24,6 @@ import java.util.Collections;
 public class DiscordRemotePlugin extends Plugin {
 
     private Configuration config;
-    private JDA jda;
 
     @Override
     public void onLoad() {
@@ -37,7 +36,7 @@ public class DiscordRemotePlugin extends Plugin {
     }
 
     private void loadDiscordBot() {
-        jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
+        JDA jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
             .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
             .build();
@@ -99,10 +98,6 @@ public class DiscordRemotePlugin extends Plugin {
 
     public Configuration getConfig() {
         return config;
-    }
-
-    private JDA getJda() {
-        return jda;
     }
 
 }

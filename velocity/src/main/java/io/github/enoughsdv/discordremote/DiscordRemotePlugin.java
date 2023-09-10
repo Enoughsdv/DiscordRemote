@@ -29,7 +29,6 @@ public class DiscordRemotePlugin {
     private final Logger logger;
 
     private YamlConfiguration config;
-    private JDA jda;
 
     @Inject
     public DiscordRemotePlugin(ProxyServer proxyServer, Logger logger) {
@@ -49,7 +48,7 @@ public class DiscordRemotePlugin {
     }
 
     private void loadDiscordBot() {
-        jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
+        JDA jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
             .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
             .build();
