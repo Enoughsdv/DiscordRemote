@@ -36,9 +36,8 @@ public class PlayerChatListener implements Listener {
                 url += event.getPlayer().getUniqueId();
                 url += "?&default=MHF_Steve&overlay";
 
-                EmbedBuilder  embedBuilder = new EmbedBuilder()
-                    .setAuthor(config.getString("chat.embed.title", "Chat Logger"),
-                        null,
+                EmbedBuilder embedBuilder = new EmbedBuilder()
+                    .setAuthor(config.getString("chat.embed.title", "Chat Logger"),null,
                         config.getBoolean("chat.embed.show_head_icon") ? url : null)
                     .setDescription(checkPAPI(event.getPlayer(), config.getString("chat.embed.content", "<{player}> {message}"))
                         .replace("{player}", event.getPlayer().getName())

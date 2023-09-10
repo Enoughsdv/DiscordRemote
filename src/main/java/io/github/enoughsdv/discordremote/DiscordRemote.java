@@ -49,10 +49,8 @@ public final class DiscordRemote extends JavaPlugin {
 
                     this.getConfig().getConfigurationSection("custom_commands.list." + string + ".arguments." + argument + ".choices")
                         .getKeys(false)
-                        .forEach(choice -> {
-                            optionData.addChoice(this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".name"),
-                                this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".value"));
-                        });
+                        .forEach(choice -> optionData.addChoice(this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".name"),
+                            this.getConfig().getString("custom_commands.list." + string + ".arguments." + argument + ".choices." + choice + ".value")));
 
                     slashCommand.addOptions(optionData);
                 });

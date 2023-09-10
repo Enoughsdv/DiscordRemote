@@ -28,7 +28,7 @@ repositories {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT"
 
-    compileOnly 'me.clip:placeholderapi:2.11.3'
+    compileOnly "me.clip:placeholderapi:2.11.3"
 
     implementation("net.dv8tion:JDA:5.0.0-beta.13") {
         exclude module: 'opus-java'
@@ -36,7 +36,6 @@ dependencies {
 }
 
 jar {
-    enabled = false
     dependsOn(shadowJar)
 }
 
