@@ -1,6 +1,7 @@
 package io.github.enoughsdv.discordremote;
 
-import io.github.enoughsdv.discordremote.listener.CustomSlashCommand;
+import io.github.enoughsdv.discordremote.listener.CustomSlashListener;
+import io.github.enoughsdv.discordremote.listener.PlayerChatListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -15,15 +16,19 @@ import java.util.Collections;
 
 public final class DiscordRemote extends JavaPlugin {
 
+    private JDA jda;
+
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
         loadDiscordBot();
+        this.getServer().getPluginManager()
+            .registerEvents(new PlayerChatListener(this), this);
     }
 
     private void loadDiscordBot() {
-        JDA jda = JDABuilder.createLight(this.getConfig().getString("settings.discord.token"), Collections.emptyList())
-            .addEventListeners(new CustomSlashCommand(this))
+        jda = JDABuilder.createLight(this.getConfig().getString("settings.discord.token"), Collections.emptyList())
+            .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
             .build();
 
@@ -64,5 +69,9 @@ public final class DiscordRemote extends JavaPlugin {
         String activityType = this.getConfig().getString("settings.discord.activity.type");
         String activityMessage = this.getConfig().getString("settings.discord.activity.message");
         return Activity.of(Activity.ActivityType.valueOf(activityType), activityMessage);
+    }
+
+    public JDA getJda() {
+        return jda;
     }
 }

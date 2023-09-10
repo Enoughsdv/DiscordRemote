@@ -7,7 +7,18 @@ settings:
 
 messages:
   no_permissions: "You have no permissions"
-  logger: "Executed custom command: {command} | By user: {user}" # Variables: {command}, {user}
+  command_logger: "Executed custom command: {command} | By user: {user}" # Variables: {command}, {user}
+
+chat:
+  enabled: true
+  channels:
+    - 1141082080420319312
+    - 1141082097705033738
+  embed:
+    title: "Chat logger"
+    content: "<{player}> {message}" # Support with PAPI | Variables: {player} {message}
+    color: "#00FF00"
+    show_head_icon: true
 
 custom_commands:
   list:

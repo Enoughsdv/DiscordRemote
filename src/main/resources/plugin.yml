@@ -1,4 +1,5 @@
-name: DiscordRemote
-version: '1.0'
 main: io.github.enoughsdv.discordremote.DiscordRemote
+name: DiscordRemote
 author: Enoughsdv
+version: '1.0'
+softdepend: ["PlaceholderAPI"]

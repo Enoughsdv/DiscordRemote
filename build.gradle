@@ -18,10 +18,17 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+
+    maven {
+        name = "placeholderapi"
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT"
+
+    compileOnly 'me.clip:placeholderapi:2.11.3'
 
     implementation("net.dv8tion:JDA:5.0.0-beta.13") {
         exclude module: 'opus-java'

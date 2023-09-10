@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-public class CustomSlashCommand extends ListenerAdapter {
+public class CustomSlashListener extends ListenerAdapter {
 
     private final DiscordRemote plugin;
     private final FileConfiguration config;
 
-    public CustomSlashCommand(DiscordRemote plugin) {
+    public CustomSlashListener(DiscordRemote plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfig();
     }
@@ -60,7 +60,7 @@ public class CustomSlashCommand extends ListenerAdapter {
                         command = command.replace("{" + argument.getName() + "}", argument.getAsString());
                     }
 
-                    plugin.getLogger().info(config.getString("messages.logger")
+                    plugin.getLogger().info(config.getString("messages.command_logger")
                         .replace("{command}", command)
                         .replace("{user}", event.getInteraction().getUser().getName()));
 
