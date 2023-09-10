@@ -1,0 +1,5 @@
+rootProject.name = 'discordremote'
+include 'spigot'
+include 'bungeecord'
+include 'velocity'
+

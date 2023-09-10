@@ -1,0 +1,67 @@
+settings:
+  discord:
+    token: ""
+    activity:
+      message: "Discord bot"
+      type: "LISTENING" # LISTENING, PLAYING, STREAMING, WATCHING, STREAMING
+
+messages:
+  no_permissions: "You have no permissions"
+  command_logger: "Executed custom command: {command} | By user: {user}" # Variables: {command}, {user}
+
+custom_commands:
+  list:
+    ping:
+      description: "this is a ping command"
+      response: "this is a test"
+      arguments: {} # Empty arguments
+      actions:
+        - "ping"
+      allowed:
+        users: []
+        roles:
+          - 1148850164610633741
+    gamemode:
+      description: "Gamemode example"
+      response: "You put the player in the selected mode"
+      arguments:
+        1:
+          type: "STRING"
+          name: "mode"
+          description: "Gamemode type"
+          required: true
+          choices:
+            1:
+              name: "Survival"
+              value: "0"
+            2:
+              name: "Creative"
+              value: "1"
+        2:
+          type: "STRING"
+          name: "player"
+          description: "Target player"
+          required: true
+          choices: {}
+      actions:
+        - "gamemode {mode} {player}"
+      allowed:
+        users: []
+        roles:
+          - 1148850164610633741
+    say:
+      description: "Send a message to the minecraft server"
+      response: "You sent the message"
+      arguments:
+        1:
+          type: "STRING" # BOOLEAN, NUMBER, STRING, INTEGER
+          name: "message"
+          description: "Send the message you like to the server"
+          required: true
+          choices: {}
+      actions:
+        - "say {message}"
+      allowed:
+        users:
+          - 754184329478799502
+        roles: []

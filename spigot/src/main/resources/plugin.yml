@@ -1,0 +1,5 @@
+main: io.github.enoughsdv.discordremote.DiscordRemotePlugin
+name: discordremote
+version: 1.0
+author: Enoughsdv
+softdepend: ["PlaceholderAPI"]

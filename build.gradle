@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+group = 'io.github.enoughsdv'
+version = '1.0-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    }
+
+    dependencies {
+        implementation('net.dv8tion:JDA:5.0.0-beta.13') {
+            exclude module: 'opus-java'
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    jar {
+        archiveClassifier = 'default'
+    }
+
+    shadowJar {
+        archiveClassifier = null
+        archiveFileName = "discordremote-${project.name}-${project.version}.jar"
+    }
+
+    artifacts {
+        archives shadowJar
+    }
+
+    build.dependsOn(shadowJar)
+}
