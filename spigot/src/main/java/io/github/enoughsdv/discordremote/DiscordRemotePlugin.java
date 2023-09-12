@@ -1,5 +1,6 @@
 package io.github.enoughsdv.discordremote;
 
+import io.github.enoughsdv.discordremote.command.DiscordRemoteCommand;
 import io.github.enoughsdv.discordremote.listeners.CustomSlashListener;
 import io.github.enoughsdv.discordremote.listeners.PlayerChatListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,11 +24,20 @@ public class DiscordRemotePlugin extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
         loadDiscordBot();
+
+        this.getCommand("discordremote").setExecutor(new DiscordRemoteCommand(this));
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
     }
 
-    private void loadDiscordBot() {
-        jda = JDABuilder.createLight(this.getConfig().getString("settings.discord.token"), Collections.emptyList())
+    public void loadDiscordBot() {
+        String token = this.getConfig().getString("settings.discord.token");
+
+        if (token == null || token.isEmpty()) {
+            this.getLogger().severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            return;
+        }
+
+        jda = JDABuilder.createLight(token, Collections.emptyList())
             .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
             .build();

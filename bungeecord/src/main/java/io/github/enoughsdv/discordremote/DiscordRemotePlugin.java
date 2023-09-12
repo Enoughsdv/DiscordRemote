@@ -1,5 +1,6 @@
 package io.github.enoughsdv.discordremote;
 
+import io.github.enoughsdv.discordremote.command.DiscordRemoteCommand;
 import io.github.enoughsdv.discordremote.listener.CustomSlashListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -33,10 +34,19 @@ public class DiscordRemotePlugin extends Plugin {
     @Override
     public void onEnable() {
         loadDiscordBot();
+
+        this.getProxy().getPluginManager().registerCommand(this, new DiscordRemoteCommand(this));
     }
 
-    private void loadDiscordBot() {
-        JDA jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
+    public void loadDiscordBot() {
+        String token = config.getString("settings.discord.token");
+
+        if (token == null || token.isEmpty()) {
+            this.getLogger().severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            return;
+        }
+
+        JDA jda = JDABuilder.createLight(token, Collections.emptyList())
             .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
             .build();
@@ -72,7 +82,7 @@ public class DiscordRemotePlugin extends Plugin {
             failure -> this.getLogger().warning("Failed to register discord slash commands"));
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         try {
             if (!getDataFolder().exists()) {
                 getDataFolder().mkdir();

@@ -5,6 +5,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import io.github.enoughsdv.discordremote.command.DiscordRemoteCommand;
 import io.github.enoughsdv.discordremote.listener.CustomSlashListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -45,9 +46,18 @@ public class DiscordRemotePlugin {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         loadDiscordBot();
+        proxyServer.getCommandManager().register(new DiscordRemoteCommand(this), "discordremote", "dremote", "discordr");
     }
 
-    private void loadDiscordBot() {
+    public void loadDiscordBot() {
+
+        String token = config.getString("settings.discord.token");
+
+        if (token == null || token.isEmpty()) {
+            logger.severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            return;
+        }
+
         JDA jda = JDABuilder.createLight(config.getString("settings.discord.token"), Collections.emptyList())
             .addEventListeners(new CustomSlashListener(this))
             .setActivity(getActivity())
@@ -84,7 +94,7 @@ public class DiscordRemotePlugin {
             failure -> logger.warning("Failed to register discord slash commands"));
     }
 
-    private void loadConfig() throws IOException {
+    public void loadConfig() throws IOException {
         File configFile = new File("config.yml");
 
         if (!configFile.exists()) {

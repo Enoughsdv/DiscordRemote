@@ -1,5 +1,17 @@
 main: io.github.enoughsdv.discordremote.DiscordRemotePlugin
-name: discordremote
+name: DiscordRemote
 version: 1.0
 author: Enoughsdv
 softdepend: ["PlaceholderAPI"]
+
+commands:
+  discordremote:
+    description: ""
+    aliases:
+      - dr
+      - discordr
+      - dremote
+
+permissions:
+  discordremote.reloadcommand:
+    description: "Allows you to use the command /dr reload"
