@@ -42,7 +42,7 @@ public class DiscordRemotePlugin extends Plugin {
         String token = config.getString("settings.discord.token");
 
         if (token == null || token.isEmpty()) {
-            this.getLogger().severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            this.getLogger().warning("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
             return;
         }
 
@@ -84,13 +84,13 @@ public class DiscordRemotePlugin extends Plugin {
 
     public void loadConfig() {
         try {
-            if (!getDataFolder().exists()) {
-                getDataFolder().mkdir();
+            if (!this.getDataFolder().exists()) {
+                this.getDataFolder().mkdir();
             }
 
-            File configFile = new File(getDataFolder(), "config.yml");
+            File configFile = new File(this.getDataFolder(), "config.yml");
             if (!configFile.exists()) {
-                InputStream inputStream = getResourceAsStream("config.yml");
+                InputStream inputStream = this.getResourceAsStream("config.yml");
                 Files.copy(inputStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
 

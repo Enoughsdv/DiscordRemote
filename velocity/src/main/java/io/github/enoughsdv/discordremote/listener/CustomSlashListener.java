@@ -63,7 +63,7 @@ public class CustomSlashListener extends ListenerAdapter {
                         .replace("{command}", command)
                         .replace("{user}", event.getInteraction().getUser().getName()));
 
-                    plugin.getProxyServer().getCommandManager().execute(plugin.getProxyServer().getConsoleCommandSource(), command);
+                    plugin.getProxyServer().getCommandManager().executeAsync(plugin.getProxyServer().getConsoleCommandSource(), command);
 
                     event.reply(config.getString("custom_commands.list." + string + ".response")).queue();
                 }

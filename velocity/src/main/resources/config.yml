@@ -11,57 +11,38 @@ messages:
 
 custom_commands:
   list:
-    ping:
-      description: "this is a ping command"
+    stop:
+      description: "this is a stop command"
       response: "this is a test"
       arguments: {} # Empty arguments
       actions:
-        - "ping"
+        - "stop"
       allowed:
         users: []
         roles:
           - 1148850164610633741
-    gamemode:
-      description: "Gamemode example"
-      response: "You put the player in the selected mode"
+    velocity:
+      description: "velocity example"
+      response: "command executed"
       arguments:
         1:
           type: "STRING"
-          name: "mode"
+          name: "type"
           description: "Gamemode type"
           required: true
           choices:
             1:
-              name: "Survival"
-              value: "0"
+              name: "Reload"
+              value: "reload"
             2:
-              name: "Creative"
-              value: "1"
-        2:
-          type: "STRING"
-          name: "player"
-          description: "Target player"
-          required: true
-          choices: {}
+              name: "Dump"
+              value: "dump"
+            3:
+              name: "Heap"
+              value: "heap"
       actions:
-        - "gamemode {mode} {player}"
+        - "velocity {type}"
       allowed:
         users: []
         roles:
           - 1148850164610633741
-    say:
-      description: "Send a message to the minecraft server"
-      response: "You sent the message"
-      arguments:
-        1:
-          type: "STRING" # BOOLEAN, NUMBER, STRING, INTEGER
-          name: "message"
-          description: "Send the message you like to the server"
-          required: true
-          choices: {}
-      actions:
-        - "say {message}"
-      allowed:
-        users:
-          - 754184329478799502
-        roles: []

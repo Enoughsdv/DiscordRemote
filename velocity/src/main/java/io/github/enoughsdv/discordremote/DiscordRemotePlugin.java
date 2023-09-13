@@ -1,6 +1,7 @@
 package io.github.enoughsdv.discordremote;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -15,11 +16,12 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.simpleyaml.configuration.file.YamlConfiguration;
 import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.logging.Logger;
 
@@ -29,24 +31,25 @@ public class DiscordRemotePlugin {
     private final ProxyServer proxyServer;
     private final Logger logger;
 
-    private YamlConfiguration config;
+    private YamlFile config;
 
     @Inject
     public DiscordRemotePlugin(ProxyServer proxyServer, Logger logger) {
-        try {
-            loadConfig();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
         this.proxyServer = proxyServer;
         this.logger = logger;
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        loadConfig();
         loadDiscordBot();
-        proxyServer.getCommandManager().register(new DiscordRemoteCommand(this), "discordremote", "dremote", "discordr");
+
+        CommandMeta commandMeta = proxyServer.getCommandManager().metaBuilder("discordremote")
+            .aliases("dremote", "discordr")
+            .plugin(this)
+            .build();
+
+        proxyServer.getCommandManager().register(commandMeta, new DiscordRemoteCommand(this));
     }
 
     public void loadDiscordBot() {
@@ -54,7 +57,7 @@ public class DiscordRemotePlugin {
         String token = config.getString("settings.discord.token");
 
         if (token == null || token.isEmpty()) {
-            logger.severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            logger.warning("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
             return;
         }
 
@@ -94,21 +97,19 @@ public class DiscordRemotePlugin {
             failure -> logger.warning("Failed to register discord slash commands"));
     }
 
-    public void loadConfig() throws IOException {
-        File configFile = new File("config.yml");
-
-        if (!configFile.exists()) {
-            try {
-                configFile.createNewFile();
-                config = new YamlConfiguration();
-                config.set("key1", "value1");
-                config.set("key2", "value2");
-                config.save(configFile);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void loadConfig() {
+        config = new YamlFile(new File("plugins/discordremote/config.yml"));
+        try {
+            if (!config.exists() || config.isEmpty()) {
+                config.createNewFile();
+                InputStream inputStream = getClass().getResourceAsStream("/config.yml");
+                assert inputStream != null;
+                Files.copy(inputStream, config.getConfigurationFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
-        } else {
-            config = YamlFile.loadConfiguration(configFile);
+
+            config.load();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -118,7 +119,7 @@ public class DiscordRemotePlugin {
         return Activity.of(Activity.ActivityType.valueOf(activityType), activityMessage);
     }
 
-    public YamlConfiguration getConfig() {
+    public YamlFile getConfig() {
         return config;
     }
 

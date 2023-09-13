@@ -33,7 +33,7 @@ public class DiscordRemotePlugin extends JavaPlugin {
         String token = this.getConfig().getString("settings.discord.token");
 
         if (token == null || token.isEmpty()) {
-            this.getLogger().severe("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
+            this.getLogger().warning("A token was not found in the configuration, consider using '/discordremote reload' when you have set the token correctly.");
             return;
         }
 
